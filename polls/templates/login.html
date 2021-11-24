@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    {% load static %}
+
+    <link id="logo" rel="shortcut icon" href="{% static 'img/logo-dark.png' %}" type="image">
+    <title> - Вход</title>
+
+    <link rel="stylesheet" href="{% static 'css/global.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/header.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}"/>
+
+
+    <script defer src="{% static 'js/global.js' %}"></script>
+    <script defer src="{% static 'js/auth.js' %}"></script>
+</head>
+<body>
+<header>
+    <a href="/" class="logo">onlineТест</a>
+    <div class="nav">
+        <a class="nav-el" href="/">ваши данные</a>
+        <a class="nav-el" href="/">смотреть списки</a>
+    </div>
+    <div id="theme-switch" class="theme-switch">Темная тема</div>
+    <div class="user">
+        {% if req.user.is_authenticated %}
+        <h1 class="username">{{ request.user }}
+        {% else %}
+                            Авторизация
+                        {% endif %}
+</h1>
+
+        <p>Выйти</p>
+    </div>
+</header>
+<main>
+      <div id="forms" class="forms">
+    <div class="form-container">
+<form method="post">
+ {% if error %}
+        <div style="color:red;">{{ error }}</div>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="Логин">
+        <input type="password" name="password" placeholder="Пароль">
+        <input type="submit" value="Войти">
+    </form>
+      </div>
+      </div>
+
+  <div class="img-container">
+                <img src="{% static 'img/bg.jpg' %}" alt="">
+            </div>
+  </main>
+</body>
+</html>
