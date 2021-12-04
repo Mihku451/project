@@ -21,35 +21,46 @@
 <header>
     <a href="/" class="logo">onlineТест</a>
     <div class="nav">
-        <a class="nav-el" href="/">ваши данные</a>
-        <a class="nav-el" href="/">смотреть списки</a>
+
+        <a class="nav-el" href="/">создать тест</a>
+        <a class="nav-el" href="/">ваши тесты</a>
+
     </div>
     <div id="theme-switch" class="theme-switch">Темная тема</div>
-    <div class="user">
-        {% if req.user.is_authenticated %}
-        <h1 class="username">{{ request.user }}
+     <div class="user">
+        <h1 class="username">
+        {% if request.user.is_authenticated %}
+        {{ request.user }}</h1>
+            <p>Выйти</p>
         {% else %}
-                            Авторизация
-                        {% endif %}
-</h1>
+                            <a href="login">Авторизация</a>
+            </h1>
 
-        <p>Выйти</p>
+                        {% endif %}
+    </h1>
+
+
     </div>
 </header>
 <main>
       <div id="forms" class="forms">
     <div class="form-container">
-<form method="post">
+<form method="post" class="auth-form">
+    <h1>Войти</h1>
+    <p>Нет аккаунта? <a class="span-action" href="SignUp">Создайте его!</a></p>
  {% if error %}
         <div style="color:red;">{{ error }}</div>
     {% endif %}
     <form method="post">
         {% csrf_token %}
-        <input type="text" name="username" placeholder="Логин">
-        <input type="password" name="password" placeholder="Пароль">
-        <input type="submit" value="Войти">
+        <input type="text" class="input-field" name="username" placeholder="Логин">
+        <input type="password" class="input-field" name="password" placeholder="Пароль">
+        <div class="action-buttons">
+        <input id="submit-login" type="submit" class="main-action" value="Войти">
+        <input type="button" class="secondary-action" value="Забыли пароль?">
+        </div>
     </form>
-      </div>
+    </div>
       </div>
 
   <div class="img-container">

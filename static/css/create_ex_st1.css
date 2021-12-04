@@ -28,7 +28,7 @@ input {
     color: var(--accent);
 }
 .form-container{
-width: 50vw;
+width: 100vw;
 height:100vh;
 }
 .forms {
@@ -36,7 +36,7 @@ height:100vh;
     display: flex;
     margin-top: var(--header-height);
     height: calc(100vh - var(--header-height));
-    width: 50vw;
+    width: 100vw;
     z-index: 0;
 
     transition: width 0.32s cubic-bezier(0.23, 1, 0.32, 1);

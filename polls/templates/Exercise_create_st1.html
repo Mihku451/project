@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    <title>WaterVoter, страница создание голосования</title>
+    <style></style>
+    {{ STATIC_URL }}
+    <link rel="stylesheet" href="{% static 'css/create_poll.css' %}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript"> window.CSRF_TOKEN = "{{ csrf_token }}"; </script>
+
+
+</head>
+
+<body>
+    <script>
+
+       "use strict"
+
+        let Choices = [];
+        let question = "";
+
+        $(document).ready(function ()
+        {
+            $("#add_cb_button").click(function ()
+            {
+                add_answer('cb');
+            });
+
+            $("#add_rb_button").click(function ()
+            {
+                add_answer('rb');
+            });
+
+            $("#add_text_button").click(function ()
+            {
+                if (errors_catch('add_to_many_text_answers')) add_answer('txt');
+            });
+
+            $("#create_button").click(function ()
+            {
+                prepare();
+            });
+
+            let timerId = setInterval(() => clear(), 100);
+        });
+
+        function add_answer(type)
+        {
+            let answer_li = document.createElement("li");
+            let answers_list = document.getElementById("answers");
+            let answ = document.createElement("input");
+            answ.name = 'answer_input';
+            let is_correct = document.createElement("input");
+            is_correct.name='correct_input';
+            let score = document.createElement("input");
+            score.name = 'score';
+            if (type == 'cb')
+            {
+                let check_type = document.createElement("input");
+                check_type.type = 'checkbox';
+                answ.className = 'answer_cb_text';
+                is_correct.type=check_type.type;
+                answer_li.appendChild(is_correct);
+                answer_li.appendChild(answ);
+                answer_li.appendChild(score);
+
+
+            }
+
+            else if (type == 'rb')
+            {
+                let check_type = document.createElement("input");
+                check_type.type = "radio";
+                check_type.name = 'radiobutton';
+                answ.className = 'answer_rb_text';
+                is_correct.appendChild(check_type);
+                is_correct.type=check_type.type;
+                answer_li.appendChild(is_correct);
+                answer_li.appendChild(answ);
+                answer_li.appendChild(score);
+
+            }
+
+            else if (type == 'txt')
+            {
+                answ.className = 'text_answer';
+                let text_input = document.createElement("input");
+                answer_li.appendChild(answ);
+                answer_li.appendChild(score);
+            }
+
+            const text = document.createTextNode('Удалить');
+            let del_button = document.createElement("button");
+            del_button.type = 'button';
+            del_button.appendChild(text);
+            answer_li.appendChild(del_button);
+            answer_li.appendChild(document.createElement("br"));
+            answer_li.appendChild(document.createElement("br"));
+            answers_list.appendChild(answer_li);
+        }
+
+        function send()
+        {
+            $.ajax(
+            {
+                type: "POST",
+                url: "",
+                data:
+                {
+                    answers: JSON.stringify(Choices),
+                    question: question,
+                    csrfmiddlewaretoken: window.CSRF_TOKEN
+                }
+            })
+
+            alert('ТЕСТ СОЗДАН!');
+            document.location.href = "create_exercise/{{id}}";
+        }
+
+        function prepare()
+        {
+            question = document.getElementById('question_text').value;
+            let inputs = document.getElementsByName('answer_input');
+
+            for (let i = 0; i < inputs.length; i++)
+            {
+                let answer_type;
+                //console.log(inputs[i].value);
+                if (inputs[i].className == 'answer_cb_text') answer_type = 'checkbox';
+                else if (inputs[i].className == 'answer_rb_text') answer_type = 'radiobutton';
+                else if (inputs[i].className == 'text_answer') answer_type = 'inputbox';
+                if (inputs[i].name == 'answer_input') Choices.push({'text': inputs[i].value, 'type': answer_type})
+            }
+
+            if (errors_catch('incorrect_form')) send();
+        }
+
+        function errors_catch(type)
+        {
+            let alert_text = '';
+            let is_ok = true;
+            let choices_arr = document.getElementsByName('answer_input');
+
+            if (type == 'incorrect_form')
+            {
+                if (question == '' || question == 'Введите текст вопроса!')
+                {
+                    $("#question_text").val('Введите текст вопроса!');
+                    is_ok = false;
+                }
+
+                if (document.getElementsByClassName('text_answer').length == 0)
+                {
+                    if (Choices.length < 2)
+                    {
+                        //console.log(Choices);
+                        alert_text += '\nСоздайте минимум два варианта ответа!  \n ';
+                        is_ok = false;
+                    }
+                }
+
+                if (document.getElementsByClassName('answer_rb_text').length == 1)
+                {
+                    alert_text += '\nОдин из нескольких - минимум 2!  \n';
+                    is_ok = false;
+                }
+
+                for (let i = 0; i < Choices.length; i++)
+                {
+                    if ((Choices[i]['text'] == '' || Choices[i]['text'] == 'Введите текст ответа!') && Choices[i]['type'] != 'inputbox')
+                    {
+                        //console.log(Choices[i]['type']);
+                        choices_arr[i].value = 'Введите текст ответа!';
+                        is_ok = false;
+                    }
+                }
+
+                if (!is_ok)
+                {
+                    Choices = [];
+                }
+            }
+
+            else if (type == 'add_to_many_text_answers')
+            {
+                let text_answers = document.getElementsByClassName("text_answer");
+
+                if (text_answers.length != 0)
+                {
+                    //console.log(document.getElementById('error_log').innerHTML);
+                    alert_text += '  \nМожет быть только одно поле ввода ответа!';
+                    is_ok = false;
+                }
+            }
+
+            document.getElementById('error_log').innerHTML = alert_text;
+            return is_ok;
+        }
+
+        function clear()
+        {
+            //console.log('func');
+            let focus_element = document.activeElement;
+            if (focus_element.value == 'Введите текст ответа!' || focus_element.value == 'Введите текст вопроса!') focus_element.value = '';
+        }
+
+    </script>
+<h1 class="question_header">Создать вопрос теста</h1>
+<div class = "main">
+    <form action="" method="POST">
+        {% csrf_token %}
+
+        <p>Вопрос: <input type="text" id="question_text" name="question">
+        <input type="file" name="file" label="картинка">
+        <input type="Integer" id="score" name="score"></p>
+
+
+        Добавить:
+
+        <div class="">
+            <button type="button" id="add_cb_button" class="cB">Несколько из</button>
+        </div>
+
+        <div class="">
+            <button type="button" id="add_rb_button" class="rB">Один из</button>
+        </div>
+
+        <div class="">
+            <button type="button" id="add_text_button" class="aB">Свой вариант</button>
+        </div>
+
+        <br>
+
+        <ol id="answers" class="list">
+            <br>
+        </ol>
+
+        <script>
+        // Удаление ответа (li)
+            document.querySelector('.list').addEventListener('click', function (event) {
+                if (event.target.nodeName === 'BUTTON') {
+                event.target.closest('li').remove()
+                }
+            })
+
+        </script>
+
+        <button type="button" id="create_button" class="vote_create">Создать</button>
+        <h3 id = error_log></h3>
+    </form>
+</div>
+</body>
+</html>

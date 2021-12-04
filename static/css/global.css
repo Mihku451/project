@@ -7,6 +7,11 @@
     --dark: #25242b;
     --dark-rgb: 37, 36, 43;
 }
+ body * {
+    transition: color .64s cubic-bezier(0.215, 0.610, 0.355, 1),
+                background-color .64s cubic-bezier(0.215, 0.610, 0.355, 1),
+                border-color .64s cubic-bezier(0.215, 0.610, 0.355, 1);
+}
 
 .light-theme {
     --bg: #FFFFFF;
@@ -156,7 +161,10 @@ main {
 
     transition: opacity .16s cubic-bezier(0.23, 1, 0.320, 1);
 }
-
+a{
+color: var(--text);
+    text-decoration: none;
+}
 .answer-add:hover {
     opacity: .48;
 }

@@ -21,19 +21,25 @@
 <header>
     <a href="/" class="logo"></a>
     <div class="nav">
-        <a class="nav-el" href="/">ваши данные</a>
-        <a class="nav-el" href="/">смотреть списки</a>
+
+        <a class="nav-el" href="/">создать тест</a>
+        <a class="nav-el" href="/">ваши тесты</a>
+
     </div>
     <div id="theme-switch" class="theme-switch">Темная тема</div>
     <div class="user">
-        {% if req.user.is_authenticated %}
-        <h1 class="username">{{ request.user }}
+        <h1 class="username">
+        {% if request.user.is_authenticated %}
+        {{ request.user }}</h1>
+            <p>Выйти</p>
         {% else %}
-                            Авторизация
-                        {% endif %}
-</h1>
+                            <a href="login">Авторизация</a>
+            </h1>
 
-        <p>Выйти</p>
+                        {% endif %}
+    </h1>
+
+
     </div>
 </header>
 <main>

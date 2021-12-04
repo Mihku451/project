@@ -7,7 +7,7 @@
     {% load static %}
 
     <link id="logo" rel="shortcut icon" href="{% static 'img/logo-dark.png' %}" type="image">
-    <title> - Вход</title>
+    <title>onlineТест главная страница</title>
 
     <link rel="stylesheet" href="{% static 'css/global.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/header.css' %}"/>
@@ -20,20 +20,26 @@
 <body>
 <header>
     <a href="/" class="logo">onlineТест</a>
-    <div class="nav">
-        <a class="nav-el" href="/">ваши данные</a>
-        <a class="nav-el" href="/">смотреть списки</a>
+<div class="nav">
+
+        <a class="nav-el" href="create_exercise">создать тест</a>
+        <a class="nav-el" href="/">ваши тесты</a>
+        <a class="nav-el" href="/">профиль</a>
     </div>
     <div id="theme-switch" class="theme-switch">Темная тема</div>
     <div class="user">
-        {% if req.user.is_authenticated %}
-        <h1 class="username">{{ request.user }}
+        <h1 class="username">
+        {% if request.user.is_authenticated %}
+        {{ request.user }}</h1>
+        <a href="logout"><p>Выйти</p></a>
         {% else %}
-                            Авторизация
-                        {% endif %}
-</h1>
+                            <a href="login">Авторизация</a>
+            </h1>
 
-        <p>Выйти</p>
+                        {% endif %}
+    </h1>
+
+
     </div>
 </header>
 <main>

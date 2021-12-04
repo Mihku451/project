@@ -7,11 +7,11 @@
     {% load static %}
 
     <link id="logo" rel="shortcut icon" href="{% static 'img/logo-dark.png' %}" type="image">
-    <title> - Вход</title>
+    <title> Создание теста этап-1</title>
 
     <link rel="stylesheet" href="{% static 'css/global.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/header.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/auth.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/create_ex_st1.css' %}"/>
 
 
     <script defer src="{% static 'js/global.js' %}"></script>
@@ -21,10 +21,8 @@
 <header>
     <a href="/" class="logo">onlineТест</a>
     <div class="nav">
-
-        <a class="nav-el" href="/">создать тест</a>
-        <a class="nav-el" href="/">ваши тесты</a>
-
+        <a class="nav-el" href="/">ваши данные</a>
+        <a class="nav-el" href="/">смотреть списки</a>
     </div>
     <div id="theme-switch" class="theme-switch">Темная тема</div>
     <div class="user">
@@ -42,27 +40,21 @@
 
     </div>
 </header>
-<main>
-      <div id="forms" class="forms">
+
+    <div id="forms" class="forms">
     <div class="form-container">
-<form method="post" class="auth-form">
-    <h1>Регистрация</h1>
-    <p>уже зарегистрировались? <a class="span-action" href="login">войдите в аккаунт!</a></p>
-  {% csrf_token %}
-    {% for field in form %}
+    <form method="post" >
+        {% csrf_token %}
 
-        {{ field }}
-
-    {% endfor %}
-    <div class="action-buttons">
-        <input id="submit-login" type="submit" class="main-action" value="Войти">
-    </div>
-</form>
-    </div>
-      </div>
-  <div class="img-container">
-                <img src="{% static 'img/bg.jpg' %}" alt="">
+        <input type="text" name="name" placeholder="имя">
+        <div>
+        <input type="Integer" name="time" placeholder="время прохождения"></div>
+        <div><input type="Integer" name="limit_of_tries" placeholder="лимит попыток">
             </div>
-  </main>
+<div>
+    <input type="submit" value="создать тест"></div>
+    </form>
+    </div>
+    </div>
 </body>
 </html>

@@ -10,37 +10,37 @@ class Exercise(models.Model):
     creation_date = models.DateTimeField(default=datetime.now)
     # неположительные значение <=> неограниченные кол-во попыток,
     limit_of_tries = models.SmallIntegerField(default=1, blank=True)
+    time = models.IntegerField(default=120)
     # отвечает за показывание правильных ответов теста после прохождения
-    visible_valid_answers = models.BooleanField(default=False, blank=True)
 
 
 class Question(models.Model):
     question_text = models.CharField(max_length=128)
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
     image = models.ImageField(default=None)
+    score = models.SmallIntegerField(default=0, blank=True, null=True)
 
     def __str__(self):
         return self.question_text
 
 
 TYPES = (
-    ('radio', 'Переключатель.'),
-    ('checkbox', 'Флажок.'),
-    ('textbox', 'Ввод.'),
+    ('radio', 'один из'),
+    ('checkbox', 'несколько из'),
+    ('textbox', 'Ввод текста'),
 )
 
 
 class Answer(models.Model):
     answer_type = models.CharField(max_length=16, choices=TYPES, default="radio")
     # сколько баллов дается если ответ правильный
-    score = models.SmallIntegerField(default=1, blank=True, null=True)
+
     # текст вар. ответа
     answer_text = models.CharField(max_length=32, blank=True)
     # правильность ответа
     is_valid = models.BooleanField(default=False)
     # Вводятся.
-    answer_input = models.CharField(max_length=32, blank=True)
-    valid_input = models.CharField(max_length=32, blank=True)
+    user_answer = models.CharField(max_length=32, blank=True)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
 
 
